@@ -1,21 +1,32 @@
-from django.urls import path, include
+"""socialpath URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path
 from social import views
-from django.conf.urls import url
+from django.urls import re_path, include
+
 
 urlpatterns = [
-    path("", views.users, name="users"),
-    path("<str:name>/", views.details, name="details"),
-    # url('<str:name>/delete', views.users, name='delete')
-    url(r'^delete/(?P<name>.*)/$', views.delete, name='delete'),
-    path("<str:name>/instagram", views.instagram, name="instagram"),
-    path("<str:name>/twitter", views.twitter, name="twitter"),
-    path("<str:name>/reddit", views.reddit, name="reddit"),
-    path("<str:name>/facebook", views.facebook, name="facebook"),
-    path("<str:name>/stackoverflow", views.stackoverflow, name="stackoverflow"),
-    path("<str:name>/pinterest", views.pinterest, name="pinterest"),
+    path('admin/', admin.site.urls),
+    path("social/", include("social.urls")),
+    path("search/", views.search, name='search'),
+    re_path(r'^celery-progress/', include('celery_progress.urls')),
     path('get-task-info/', views.get_task_info, name="get_task_info"),
-    path(r'^celery-progress/', include('celery_progress.urls')),
-    path('delete_platform/<slug:name>/<slug:platform>/', views.delete_platform, name='delete_platform'),
-    path("<slug:name>/timeline/<slug:platform>", views.get_timeline, name="get_timeline"),
+
+    # the endpoint is configurable
+
 
 ]
